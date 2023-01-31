@@ -16,27 +16,45 @@ namespace LaLTrackmaniaTournament
     {
 
         private string[] Scopes = { SheetsService.Scope.Spreadsheets }; // Change this if you're accessing Drive or Docs
-        private string SpreadSheetId = ""; // ID is stored in an external file ignored by git.
-        private SheetsService SheetsService;
+        private string SpreadSheetId = "1BeVSvlm3uZCIV302iWv8bzSZ0gOFzY9Tq5WtuVzdivc";
+        public SheetsService SheetsService { get; private set; }
+
+        /// <summary>
+        /// ID has to be stored in "credentials.json" in the root directory with "Copy always" set in its properties.
+        /// <br/> The content for that file can be found in my project overview google tables sheet.
+        /// </summary>
 
         public GoogleSheet(string applicationName, string spreadSheetId)
         {
+
             SpreadSheetId = spreadSheetId;
 
             GoogleCredential credential;
 
-            // Put your credentials json file in the root of the solution and make sure copy to output dir property is set to always copy 
-            using (var stream = new FileStream("credentials.json", FileMode.Open, FileAccess.Read))
+            // Put your credentials json file in the root of the solution and make sure copy to output dir property is set to always copy
+            try
             {
-                credential = GoogleCredential.FromStream(stream).CreateScoped(Scopes);
-            }
+                using (var stream = new FileStream("credentials.json", FileMode.Open, FileAccess.Read))
+                {
+                    credential = GoogleCredential.FromStream(stream).CreateScoped(Scopes);
+                }
 
-            // Create Google Sheets API service.
-            SheetsService = new SheetsService(new BaseClientService.Initializer()
+                // Create Google Sheets API service.
+                SheetsService = new SheetsService(new BaseClientService.Initializer()
+                {
+                    HttpClientInitializer = credential,
+                    ApplicationName = applicationName
+                });
+
+                Console.WriteLine("Successfully connected to the Google Spreadsheet.\n");
+            } 
+            
+            catch(FileNotFoundException e)
             {
-                HttpClientInitializer = credential,
-                ApplicationName = applicationName
-            });
+                Console.WriteLine(e.Message);
+                Console.WriteLine("\n\"credentials.json\" is missing in the root directory or has not set \"Copy always\" in its properties.");
+                Console.WriteLine("If the file is missing, the content for it can be found in my project overview google tables sheet.\n");
+            }      
         }
 
         /// <summary>

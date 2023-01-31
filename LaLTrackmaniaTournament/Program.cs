@@ -25,6 +25,13 @@ namespace LaLTrackmaniaTournament
             
             GoogleSheet googleSheet = new GoogleSheet(ApplicationName, SpreadSheetId);
 
+            if(googleSheet.SheetsService == null)
+            {
+                Console.WriteLine("Error occured - Aborting...");
+                Console.ReadKey();
+                return;
+            }
+
             /*
             List<List<string>> writeValues = new List<List<string>>();
             for (int y = 0; y < 10; y++)
