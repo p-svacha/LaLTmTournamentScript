@@ -20,13 +20,19 @@ namespace LaLTrackmaniaTournament
             Name = name;
         }
 
-        public List<LeaderboardEntry> UpdateLeaderboard(List<string> participants = null)
+        public Track(TrackData data)
+        {
+            Id = data.Id;
+            Name = data.Name;
+        }
+
+        public List<LeaderboardEntry> UpdateLeaderboard(string apiCallInfo, List<string> participants = null)
         {
             List<LeaderboardEntry> leaderboard = new List<LeaderboardEntry>();
 
             using (var client = new WebClient())
             {
-                client.Headers[HttpRequestHeader.UserAgent] = "Lock and Load 13 LAN Tournament, www.lockandload.ch, API request by Phil42#7256";
+                client.Headers[HttpRequestHeader.UserAgent] = apiCallInfo;
 
                 // Get the leaderboard from the trackmania.io API as a JSON object. One request will return the top 50 times.
                 // If more than 50 records are needed, use leaderboard/map/[id]?offset=50&length=50, incrementing offset by 50 per step.

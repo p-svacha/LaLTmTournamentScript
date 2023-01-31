@@ -9,46 +9,47 @@ namespace LaLTrackmaniaTournament
 {
     /// <summary>
     /// A tournament is a package that holds all information required to calculate the rankings.
-    /// <br/> On instanciation a path is required that holds files with information about the players, tracks and point system, formatted the following way.
-    /// <br/> players.txt: Each line is the Ubisoft Connect name of one player participating in the tournament as it is listed on trackmania.io.
-    /// <br/> tracks.txt: Each line is the id of a track that is counted for the ranking. The id can be extracted from trackmania.io.
-    /// <br/> points.txt: Each line represents the amount of points a player gets for that rank on a track with the first line being rank 1.
     /// </summary>
     public class Tournament
     {
-        public List<int> ScoringSystem;
-        public List<string> Players;
-        public List<Track> Tracks;
-        public int NumTracks;
+        /// <summary>
+        /// Path to the json file that contains all information about the tournament.
+        /// </summary>
+        private string TournamentJsonPath;
 
         public Dictionary<string, int> PlayerPoints;
 
-        public Tournament(List<int> scoringSystem, List<string> players, List<Track> tracks)
+        public Tournament(string jsonPath)
         {
-            ScoringSystem = scoringSystem;
-            Players = players;
-            Tracks = tracks;
-            NumTracks = tracks.Count;
+            TournamentJsonPath = jsonPath;
             PlayerPoints = new Dictionary<string, int>();
         }
 
         public void UpdateLeaderboards(GoogleSheet sheet)
         {
+            // Reload tournament data to get all updated info
+            TournamentData tournamentData = TournamentData.CreateFromJson(TournamentJsonPath);
+
+            // Recreate track objects
+            List<Track> tracks = new List<Track>();
+            foreach (TrackData trackData in tournamentData.Tracks) tracks.Add(new Track(trackData));
+
+            // Clear leaderboard
             PlayerPoints.Clear();
 
             // Get leaderboards
             Console.WriteLine("\n########## " + DateTime.Now + "  UPDATING LEADERBOARDS ##########");
-            foreach (Track track in Tracks)
+            foreach (Track track in tracks)
             {
                 // Get full leaderboard of track with all players
-                List<LeaderboardEntry> leaderboard = track.UpdateLeaderboard(participants: Players);
+                List<LeaderboardEntry> leaderboard = track.UpdateLeaderboard(tournamentData.TrackmaniaApiInfo, tournamentData.Players);
 
                 // Add points of that track to total leaderboard
                 Console.WriteLine("\nLeaderboard for " + track.Name + ":");
                 foreach(LeaderboardEntry entry in leaderboard)
                 {
-                    if(PlayerPoints.ContainsKey(entry.Player)) PlayerPoints[entry.Player] += ScoringSystem[entry.Position - 1];
-                    else PlayerPoints[entry.Player] = ScoringSystem[entry.Position - 1];
+                    if(PlayerPoints.ContainsKey(entry.Player)) PlayerPoints[entry.Player] += tournamentData.Points[entry.Position - 1];
+                    else PlayerPoints[entry.Player] = tournamentData.Points[entry.Position - 1];
                     Console.WriteLine(entry.ToString());
                 }
 
@@ -66,45 +67,45 @@ namespace LaLTrackmaniaTournament
             }
 
             // Write to google sheets
-            List<List<string>> data = new List<List<string>>();
+            List<List<string>> sheetContent = new List<List<string>>();
 
             // Row 1
             List<string> row1 = new List<string>() { "Zwischenstand Spieler" };
-            for (int i = 0; i < 4 + 2 * NumTracks; i++) row1.Add("");
+            for (int i = 0; i < 2 * tracks.Count + 3; i++) row1.Add("");
             row1.Add("Zwischenstand Strecken");
-            data.Add(row1);
+            sheetContent.Add(row1);
 
             // Row 2
             List<string> row2 = new List<string>() { "Rang", "Spieler", "Punkte Total" };
-            foreach(Track track in Tracks)
+            foreach(Track track in tracks)
             {
                 row2.Add(track.Name);
                 row2.Add("");
             }
             row2.Add("Zuletzt aktualisiert:");
             row2.Add("Rang");
-            foreach (Track track in Tracks)
+            foreach (Track track in tracks)
             {
                 row2.Add(track.Name);
                 row2.Add("");
             }
-            data.Add(row2);
+            sheetContent.Add(row2);
 
             // Row 3
             List<string> row3 = new List<string>() { "", "", "" };
-            foreach (Track track in Tracks)
+            foreach (Track track in tracks)
             {
                 row3.Add("Rang");
                 row3.Add("Punkte");
             }
             row3.Add(DateTime.Now.ToString());
             row3.Add("");
-            foreach (Track track in Tracks)
+            foreach (Track track in tracks)
             {
                 row3.Add("Spieler");
                 row3.Add("Zeit");
             }
-            data.Add(row3);
+            sheetContent.Add(row3);
 
             // Rows 4+
             int currentRank = 1;
@@ -112,7 +113,7 @@ namespace LaLTrackmaniaTournament
             {
                 string player = entry.Key;
                 List<string> row = new List<string>() { currentRank.ToString(), player, entry.Value.ToString() };
-                foreach (Track track in Tracks)
+                foreach (Track track in tracks)
                 {
                     LeaderboardEntry playerPos = track.Leaderboard.FirstOrDefault(x => x.Player == player);
                     if(playerPos == null)
@@ -123,13 +124,13 @@ namespace LaLTrackmaniaTournament
                     else
                     {
                         row.Add(playerPos.Position.ToString());
-                        row.Add(ScoringSystem[playerPos.Position - 1].ToString());
+                        row.Add(tournamentData.Points[playerPos.Position - 1].ToString());
                     }
                 }
                 row.Add("");
                 row.Add(currentRank.ToString());
 
-                foreach (Track track in Tracks)
+                foreach (Track track in tracks)
                 {
                     LeaderboardEntry rankEntry = track.Leaderboard.FirstOrDefault(x => x.Position == currentRank);
                     if (rankEntry == null)
@@ -146,11 +147,11 @@ namespace LaLTrackmaniaTournament
 
 
                 currentRank++;
-                data.Add(row);
+                sheetContent.Add(row);
             }
 
 
-            sheet.WriteCells("LaL13", data);
+            sheet.WriteCells(tournamentData.GoogleSheetInfo.SheetName, sheetContent);
         }
     }
 }
