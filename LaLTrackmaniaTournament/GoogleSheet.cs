@@ -16,7 +16,7 @@ namespace LaLTrackmaniaTournament
     {
 
         private string[] Scopes = { SheetsService.Scope.Spreadsheets }; // Change this if you're accessing Drive or Docs
-        private string SpreadSheetId = "1BeVSvlm3uZCIV302iWv8bzSZ0gOFzY9Tq5WtuVzdivc";
+        private string SpreadSheetId = ""; // ID is stored in an external file ignored by git.
         private SheetsService SheetsService;
 
         public GoogleSheet(string applicationName, string spreadSheetId)

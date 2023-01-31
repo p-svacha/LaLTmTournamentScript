@@ -7,6 +7,13 @@ using System.Threading.Tasks;
 
 namespace LaLTrackmaniaTournament
 {
+    /// <summary>
+    /// A tournament is a package that holds all information required to calculate the rankings.
+    /// <br/> On instanciation a path is required that holds files with information about the players, tracks and point system, formatted the following way.
+    /// <br/> players.txt: Each line is the Ubisoft Connect name of one player participating in the tournament as it is listed on trackmania.io.
+    /// <br/> tracks.txt: Each line is the id of a track that is counted for the ranking. The id can be extracted from trackmania.io.
+    /// <br/> points.txt: Each line represents the amount of points a player gets for that rank on a track with the first line being rank 1.
+    /// </summary>
     public class Tournament
     {
         public List<int> ScoringSystem;
