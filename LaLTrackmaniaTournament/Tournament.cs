@@ -46,9 +46,9 @@ namespace LaLTrackmaniaTournament
 
                 // Add points of that track to total leaderboard
                 Console.WriteLine("\nLeaderboard for " + track.Name + ":");
-                foreach(LeaderboardEntry entry in leaderboard)
+                foreach (LeaderboardEntry entry in leaderboard)
                 {
-                    if(PlayerPoints.ContainsKey(entry.Player)) PlayerPoints[entry.Player] += tournamentData.Points[entry.Position - 1];
+                    if (PlayerPoints.ContainsKey(entry.Player)) PlayerPoints[entry.Player] += tournamentData.Points[entry.Position - 1];
                     else PlayerPoints[entry.Player] = tournamentData.Points[entry.Position - 1];
                     Console.WriteLine(entry.ToString());
                 }
@@ -60,30 +60,35 @@ namespace LaLTrackmaniaTournament
             Console.WriteLine("\nTOTAL Leaderboard:");
             PlayerPoints = PlayerPoints.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
             int rank = 1;
-            foreach(KeyValuePair<string, int> rankingEntry in PlayerPoints)
+            foreach (KeyValuePair<string, int> rankingEntry in PlayerPoints)
             {
                 Console.WriteLine(rank + ". " + rankingEntry.Key + ", " + rankingEntry.Value);
                 rank++;
             }
 
             // Write to google sheets
+            WriteLeaderboardToGoogleSheet(tournamentData, tracks, sheet);
+        }
+
+        private void WriteLeaderboardToGoogleSheet(TournamentData tournamentData, List<Track> tracks, GoogleSheet sheet)
+        { 
             List<List<string>> sheetContent = new List<List<string>>();
 
             // Row 1
-            List<string> row1 = new List<string>() { "Zwischenstand Spieler" };
+            List<string> row1 = new List<string>() { "Standings" };
             for (int i = 0; i < 2 * tracks.Count + 3; i++) row1.Add("");
-            row1.Add("Zwischenstand Strecken");
+            row1.Add("Track Leaderboards");
             sheetContent.Add(row1);
 
             // Row 2
-            List<string> row2 = new List<string>() { "Rang", "Spieler", "Punkte Total" };
-            foreach(Track track in tracks)
+            List<string> row2 = new List<string>() { "Rank", "Player", "Points" };
+            foreach (Track track in tracks)
             {
                 row2.Add(track.Name);
                 row2.Add("");
             }
-            row2.Add("Zuletzt aktualisiert:");
-            row2.Add("Rang");
+            row2.Add("Last Updated:");
+            row2.Add("Rank");
             foreach (Track track in tracks)
             {
                 row2.Add(track.Name);
@@ -95,15 +100,15 @@ namespace LaLTrackmaniaTournament
             List<string> row3 = new List<string>() { "", "", "" };
             foreach (Track track in tracks)
             {
-                row3.Add("Rang");
-                row3.Add("Punkte");
+                row3.Add("Rank");
+                row3.Add("Points");
             }
             row3.Add(DateTime.Now.ToString());
             row3.Add("");
             foreach (Track track in tracks)
             {
-                row3.Add("Spieler");
-                row3.Add("Zeit");
+                row3.Add("Player");
+                row3.Add("Time");
             }
             sheetContent.Add(row3);
 
@@ -116,7 +121,7 @@ namespace LaLTrackmaniaTournament
                 foreach (Track track in tracks)
                 {
                     LeaderboardEntry playerPos = track.Leaderboard.FirstOrDefault(x => x.Player == player);
-                    if(playerPos == null)
+                    if (playerPos == null)
                     {
                         row.Add("");
                         row.Add("");
@@ -154,4 +159,5 @@ namespace LaLTrackmaniaTournament
             sheet.WriteCells(tournamentData.GoogleSheetInfo.SheetName, sheetContent);
         }
     }
+
 }
