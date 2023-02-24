@@ -1,0 +1,46 @@
+{
+    "Players": 
+    [
+        "Micka_TM.",
+        "xTigershark777",
+        "Teuflum",
+        "twist__",
+        "F9.eLconn21",
+        "Mury99",
+        "Novu.",
+        "mimexdd",
+        "ShcrTM",
+        "crispp..",
+        "ImotJr.",
+        "Mawi__",
+        "DexteR.771",
+        "Magorian0212"
+    ],
+    
+    "Tracks":
+    [
+        {
+            "Name": "Glacialis",
+            "Id": "5P0k2lR5MP_kIGDMv2pJUfgEmzm"
+        },
+        {
+            "Name": "ThunderStorm",
+            "Id": "vVYgYYofH1tTGsprVDMYExZlHBj"
+        },
+        {
+            "Name": "OPUS",
+            "Id": "Cyea0ZPP1AVqzqiqLezlCYw5LP7"
+        }
+    ],
+    
+    "Points": [50, 45, 41, 38, 35, 32, 30, 28, 26, 24, 22, 20, 18, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    
+    "GoogleSheetInfo":
+    {
+        "ApplicationName": "LaL Trackmania Tournament",
+        "DocumentId": "1BeVSvlm3uZCIV302iWv8bzSZ0gOFzY9Tq5WtuVzdivc",
+        "SheetName": "Test"
+    },
+
+    "TrackmaniaApiInfo": "Lock and Load LAN Tournament, www.lockandload.ch, API request by Phil42#7256"
+}
