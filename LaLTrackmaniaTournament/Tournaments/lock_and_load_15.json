@@ -1,0 +1,50 @@
+{
+  "Players": [
+    "Komy-",
+    "Thomas_Jean",
+    "GranaDy,",
+    "keby..",
+    "Whizzy.."
+  ],
+
+  "Tracks": [
+    {
+      "Name": "Velocity",
+      "Id": "CDr2uAX_YPgymXwngKeCKW8a61"
+    },
+    {
+      "Name": "Split Decision",
+      "Id": "T9JAWlx3II3VRWVNqZo2jmLGD7k"
+    },
+    {
+      "Name": "Orchid",
+      "Id": "I9iblrX6WVgSyI49qvqfXIHyVrb"
+    },
+    {
+      "Name": "Mixup",
+      "Id": "YEJGTUVhiB3T_aiiPM0E6YSbmib"
+    },
+    {
+      "Name": "Dirt to Dirt",
+      "Id": "oTSiWIhdl09j2LBkkJw3Gubjqse"
+    },
+    {
+      "Name": "Cruiser",
+      "Id": "i9S85U5yu7yH6OwoT5albuYer38"
+    },
+    {
+      "Name": "Alpine",
+      "Id": "jF7FuD4O983Cu2M3giNXjzIBHh2"
+    }
+  ],
+
+  "Points": [ 50, 45, 41, 38, 35, 32, 30, 28, 26, 24, 22, 20, 18, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ],
+
+  "GoogleSheetInfo": {
+    "ApplicationName": "LaL Trackmania Tournament",
+    "DocumentId": "1BeVSvlm3uZCIV302iWv8bzSZ0gOFzY9Tq5WtuVzdivc",
+    "SheetName": "LaL15"
+  },
+
+  "TrackmaniaApiInfo": "Lock and Load LAN Tournament, www.lockandload.ch, API request by Phil42 (phil.42 on Discord)"
+}
